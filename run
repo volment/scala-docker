@@ -1,0 +1,62 @@
+#!/bin/sh
+function usage {
+	cat <<EOF
+$(basename ${0}) is a tool for ...
+
+Usage:
+	$(basename ${0}) [options]
+
+Options:
+	build            docker-compose build
+	exec [args....]  bash exec
+	--version, -v    print $(basename ${0}) version
+	--help, -h       print this
+EOF
+
+}
+
+function version {
+	echo "$(basename ${0}) version 0.0.1 "
+}
+
+red=31
+green=32
+yellow=33
+blue=34
+
+function cecho {
+	color=$1
+	shift
+	echo -e "\033[${color}m$@\033[m"
+}
+
+function up {
+	docker-compose build && docker-compose up -d
+}
+
+function down {
+	docker-compose down
+}
+
+case ${1} in
+	build)
+		docker-compose build
+		;;
+
+	exec)
+		docker-compose run app ${*#exec}
+		;;
+
+	help|--help|-h)
+		usage
+		;;
+
+	version|--version|-v)
+		version
+		;;
+	*)
+		echo "[ERROR] Invalid subcommand '${1}'"
+		usage
+		exit 1
+		;;
+esac

@@ -1,0 +1,3 @@
+repos/*
+!.gitignore
+!repos/helloWorld/.gitkeep
